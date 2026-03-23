@@ -56,7 +56,7 @@ def draw_maze_plotly(maze, visited, frontier, path, start, goal):
 
 
 def metric_card(col, label, value, color):
-    """Crea una tarjeta de métrica"""
+    """Crea una tarjeta de metrica"""
     with col:
         st.markdown(f"""
         <div style='background: #1a1a1a; border: 1px solid #2a2a2a; 
@@ -68,54 +68,4 @@ def metric_card(col, label, value, color):
         """, unsafe_allow_html=True)
 
 
-def comparison_table(results):
-    """Crea una tabla de comparación de resultados"""
-    if not results:
-        return None
-    
-    valid_results = [r for r in results if r['path'] != 'N/A']
-    if not valid_results:
-        st.warning("No hay resultados válidos para mostrar")
-        return
-    
-    best_path = min(r['path'] for r in valid_results)
-    best_nodes = min(r['nodes'] for r in valid_results)
-    best_time = min(r['time'] for r in valid_results)
-    
-    # Crear tabla HTML
-    rows_html = ""
-    for r in results:
-        path_str = str(r['path']) if r['path'] != 'N/A' else 'N/A'
-        path_best = path_str != 'N/A' and r['path'] == best_path
-        nodes_best = r['nodes'] == best_nodes
-        time_best = abs(r['time'] - best_time) < 0.01
-        
-        path_color = '#C8F050' if path_best else '#E8E8E0'
-        nodes_color = '#C8F050' if nodes_best else '#E8E8E0'
-        time_color = '#C8F050' if time_best else '#E8E8E0'
-        
-        rows_html += f"""
-        <tr>
-            <td style='padding: 8px; border-bottom: 1px solid #2a2a2a;'>{r['algo']}</td>
-            <td style='color: {path_color}; padding: 8px; border-bottom: 1px solid #2a2a2a;'>{path_str}</td>
-            <td style='color: {nodes_color}; padding: 8px; border-bottom: 1px solid #2a2a2a;'>{r['nodes']}</td>
-            <td style='color: {time_color}; padding: 8px; border-bottom: 1px solid #2a2a2a;'>{r['time']:.2f}ms</td>
-        </tr>
-        """
-    
-    html = f"""
-    <table style='width: 100%; border-collapse: collapse; font-size: 12px;'>
-        <tr style='background: #1a1a1a;'>
-            <th style='padding: 8px; border-bottom: 2px solid #2a2a2a; color: #6B6B65;'>ALGO</th>
-            <th style='padding: 8px; border-bottom: 2px solid #2a2a2a; color: #6B6B65;'>CAMINO</th>
-            <th style='padding: 8px; border-bottom: 2px solid #2a2a2a; color: #6B6B65;'>NODOS</th>
-            <th style='padding: 8px; border-bottom: 2px solid #2a2a2a; color: #6B6B65;'>TIEMPO</th>
-        </tr>
-        {rows_html}
-    </table>
-    """
-    
-    st.markdown(html, unsafe_allow_html=True)
-
-
-__all__ = ['draw_maze_plotly', 'metric_card', 'comparison_table']
+__all__ = ['draw_maze_plotly', 'metric_card']

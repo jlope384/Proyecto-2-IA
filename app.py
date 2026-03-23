@@ -1,14 +1,15 @@
 """
 Maze Solver — Proyecto #2 IA CC3085
-Aplicación web con Streamlit
+Aplicacion web con Streamlit
 
 Algoritmos: BFS, DFS, Greedy Best-First, A*
-Heurísticas: Manhattan, Euclidiana
+Heuristicas: Manhattan, Euclidiana
 """
 
 import streamlit as st
 import time
 import random
+import pandas as pd
 from io import StringIO
 
 from maze_solver.utils import (
@@ -26,7 +27,6 @@ from maze_solver.algorithms import (
 from maze_solver.ui.components import (
     draw_maze_plotly,
     metric_card,
-    comparison_table,
 )
 
 
@@ -35,7 +35,7 @@ from maze_solver.ui.components import (
 # ═════════════════════════════════════════════════════════════════
 st.set_page_config(
     page_title="Maze Solver | IA CC3085",
-    page_icon="🧭",
+    page_icon="N",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -222,7 +222,7 @@ def main():
     
     # Header
     st.markdown("# Maze Solver")
-    st.markdown("**Proyecto #2 IA CC3085** — Algoritmos de búsqueda en laberintos")
+    st.markdown("**Proyecto #2 IA CC3085** — Algoritmos de busqueda en laberintos")
     st.divider()
     
     # Layout principal
@@ -232,7 +232,7 @@ def main():
     #  PANEL IZQUIERDO (CONTROLES)
     # ═════════════════════════════════════════════════════════════
     with col_left:
-        st.markdown("## Configuración")
+        st.markdown("## Configuracion")
         
         # Cargar laberinto
         st.subheader("Laberinto")
@@ -253,9 +253,9 @@ def main():
                     st.error("Error: El laberinto debe tener inicio (2) y meta (3)")
                 else:
                     load_maze_data(maze, rows, cols, start, goal)
-                    st.success(f"Laberinto cargado: {rows}×{cols}")
+                    st.success(f"Laberinto cargado: {rows}x{cols}")
             except Exception as e:
-                st.error(f"Error al cargar archivo: {e}")
+                st.error(f"❌ Error al cargar archivo: {e}")
         
         # Opción 2: Crear aleatorio
         if st.button("Generar laberinto aleatorio", use_container_width=True):
@@ -284,8 +284,8 @@ def main():
         
         st.divider()
         
-        # Heurística
-        st.subheader("Heurística")
+        # Heuristica
+        st.subheader("Heuristica")
         col1, col2 = st.columns(2)
         with col1:
             if st.button("Manhattan", use_container_width=True):
@@ -299,13 +299,13 @@ def main():
         
         st.divider()
         
-        # Botones de acción
-        st.subheader("▶Acciones")
+        # Botones de accion
+        st.subheader("Acciones")
         
         col1, col2 = st.columns(2)
         
         with col1:
-            if st.button("▶ Ejecutar", use_container_width=True, key="run"):
+            if st.button("Ejecutar", use_container_width=True, key="run"):
                 if st.session_state.maze:
                     with st.spinner(f"Ejecutando {st.session_state.algorithm}..."):
                         result = run_algorithm(st.session_state.algorithm)
@@ -315,13 +315,13 @@ def main():
                     st.warning("Carga un laberinto primero")
         
         with col2:
-            if st.button("◈ Comparar todos", use_container_width=True, key="compare"):
+            if st.button("Comparar todos", use_container_width=True, key="compare"):
                 if st.session_state.maze:
                     run_all_algorithms()
                 else:
                     st.warning("Carga un laberinto primero")
         
-        if st.button("✕ Limpiar", use_container_width=True, key="clear"):
+        if st.button("Limpiar", use_container_width=True, key="clear"):
             st.session_state.start = st.session_state.orig_start
             st.session_state.compare_results = []
             reset_maze_state()
@@ -332,7 +332,7 @@ def main():
         # Info
         if st.session_state.maze:
             st.markdown("### Info del laberinto")
-            st.caption(f"**Dimensiones:** {st.session_state.rows}×{st.session_state.cols}")
+            st.caption(f"**Dimensiones:** {st.session_state.rows}x{st.session_state.cols}")
             st.caption(f"**Inicio:** {st.session_state.start}")
             st.caption(f"**Meta:** {st.session_state.goal}")
     
@@ -341,7 +341,7 @@ def main():
     # ═════════════════════════════════════════════════════════════
     with col_right:
         if st.session_state.maze:
-            # Visualización del laberinto
+            # Visualizacion del laberinto
             st.markdown("## Laberinto")
             fig = draw_maze_plotly(
                 st.session_state.maze,
@@ -353,7 +353,7 @@ def main():
             )
             st.plotly_chart(fig, use_container_width=True)
             
-            # Métricas si hay resultado
+            # Metricas si hay resultado
             if st.session_state.last_result:
                 st.markdown("## Resultados")
                 
@@ -370,15 +370,37 @@ def main():
                            f"{result['time']:.2f}",
                            '#F05090')
             
-            # Comparación
+            # Comparacion
             if st.session_state.compare_results:
-                st.markdown("## Comparación")
-                comparison_table(st.session_state.compare_results)
+                st.markdown("## Comparacion")
+                
+                # Crear DataFrame para la tabla
+                df_data = []
+                for r in st.session_state.compare_results:
+                    df_data.append({
+                        'Algoritmo': r['algo'],
+                        'Camino': r['path'] if r['path'] != 'N/A' else 'N/A',
+                        'Nodos': r['nodes'],
+                        'Tiempo (ms)': f"{r['time']:.2f}"
+                    })
+                
+                df = pd.DataFrame(df_data)
+                st.dataframe(
+                    df,
+                    use_container_width=True,
+                    hide_index=True,
+                    column_config={
+                        "Algoritmo": st.column_config.TextColumn("Algoritmo", width="medium"),
+                        "Camino": st.column_config.TextColumn("Camino", width="medium"),
+                        "Nodos": st.column_config.NumberColumn("Nodos", width="medium"),
+                        "Tiempo (ms)": st.column_config.TextColumn("Tiempo (ms)", width="medium"),
+                    }
+                )
         
         else:
             st.info(
                 "Carga un laberinto usando el panel de la izquierda para comenzar",
-                icon="ℹ️"
+                icon="info"
             )
     
     # Footer

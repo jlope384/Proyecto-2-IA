@@ -221,7 +221,7 @@ def main():
     init_session_state()
     
     # Header
-    st.markdown("# 🧭 Maze Solver")
+    st.markdown("# Maze Solver")
     st.markdown("**Proyecto #2 IA CC3085** — Algoritmos de búsqueda en laberintos")
     st.divider()
     
@@ -232,10 +232,10 @@ def main():
     #  PANEL IZQUIERDO (CONTROLES)
     # ═════════════════════════════════════════════════════════════
     with col_left:
-        st.markdown("## ⚙️ Configuración")
+        st.markdown("## Configuración")
         
         # Cargar laberinto
-        st.subheader("📁 Laberinto")
+        st.subheader("Laberinto")
         
         # Opción 1: Cargar archivo
         uploaded_file = st.file_uploader(
@@ -250,15 +250,15 @@ def main():
                 maze, rows, cols, start, goal = load_maze_from_text(content)
                 
                 if not start or not goal:
-                    st.error("❌ Error: El laberinto debe tener inicio (2) y meta (3)")
+                    st.error("Error: El laberinto debe tener inicio (2) y meta (3)")
                 else:
                     load_maze_data(maze, rows, cols, start, goal)
-                    st.success(f"✅ Laberinto cargado: {rows}×{cols}")
+                    st.success(f"Laberinto cargado: {rows}×{cols}")
             except Exception as e:
-                st.error(f"❌ Error al cargar archivo: {e}")
+                st.error(f"Error al cargar archivo: {e}")
         
         # Opción 2: Crear aleatorio
-        if st.button("🎲 Generar laberinto aleatorio", use_container_width=True):
+        if st.button("Generar laberinto aleatorio", use_container_width=True):
             # Crear un laberinto aleatorio pequeño
             rows, cols = 15, 20
             maze = [[random.choice([0, 0, 0, 1]) for _ in range(cols)] for _ in range(rows)]
@@ -270,12 +270,12 @@ def main():
             maze[goal[0]][goal[1]] = 3
             
             load_maze_data(maze, rows, cols, start, goal)
-            st.success("✅ Laberinto generado")
+            st.success("Laberinto generado")
         
         st.divider()
         
         # Algoritmos
-        st.subheader("🔍 Algoritmo")
+        st.subheader("Algoritmo")
         st.session_state.algorithm = st.radio(
             "Selecciona un algoritmo:",
             ["BFS", "DFS", "Greedy", "A*"],
@@ -285,7 +285,7 @@ def main():
         st.divider()
         
         # Heurística
-        st.subheader("📏 Heurística")
+        st.subheader("Heurística")
         col1, col2 = st.columns(2)
         with col1:
             if st.button("Manhattan", use_container_width=True):
@@ -300,7 +300,7 @@ def main():
         st.divider()
         
         # Botones de acción
-        st.subheader("▶️ Acciones")
+        st.subheader("▶Acciones")
         
         col1, col2 = st.columns(2)
         
@@ -312,14 +312,14 @@ def main():
                         if result:
                             st.session_state.results.append(result)
                 else:
-                    st.warning("⚠️ Carga un laberinto primero")
+                    st.warning("Carga un laberinto primero")
         
         with col2:
             if st.button("◈ Comparar todos", use_container_width=True, key="compare"):
                 if st.session_state.maze:
                     run_all_algorithms()
                 else:
-                    st.warning("⚠️ Carga un laberinto primero")
+                    st.warning("Carga un laberinto primero")
         
         if st.button("✕ Limpiar", use_container_width=True, key="clear"):
             st.session_state.start = st.session_state.orig_start
@@ -331,7 +331,7 @@ def main():
         
         # Info
         if st.session_state.maze:
-            st.markdown("### 📊 Info del laberinto")
+            st.markdown("### Info del laberinto")
             st.caption(f"**Dimensiones:** {st.session_state.rows}×{st.session_state.cols}")
             st.caption(f"**Inicio:** {st.session_state.start}")
             st.caption(f"**Meta:** {st.session_state.goal}")
@@ -342,7 +342,7 @@ def main():
     with col_right:
         if st.session_state.maze:
             # Visualización del laberinto
-            st.markdown("## 🗺️ Laberinto")
+            st.markdown("## Laberinto")
             fig = draw_maze_plotly(
                 st.session_state.maze,
                 st.session_state.visited,
@@ -355,7 +355,7 @@ def main():
             
             # Métricas si hay resultado
             if st.session_state.last_result:
-                st.markdown("## 📈 Resultados")
+                st.markdown("## Resultados")
                 
                 col1, col2, col3 = st.columns(3)
                 result = st.session_state.last_result
@@ -372,12 +372,12 @@ def main():
             
             # Comparación
             if st.session_state.compare_results:
-                st.markdown("## 📊 Comparación")
+                st.markdown("## Comparación")
                 comparison_table(st.session_state.compare_results)
         
         else:
             st.info(
-                "📁 Carga un laberinto usando el panel de la izquierda para comenzar",
+                "Carga un laberinto usando el panel de la izquierda para comenzar",
                 icon="ℹ️"
             )
     
@@ -385,11 +385,11 @@ def main():
     st.divider()
     col1, col2, col3 = st.columns(3)
     with col1:
-        st.caption("🎓 Universidad del Valle de Guatemala")
+        st.caption("Universidad del Valle de Guatemala")
     with col2:
-        st.caption("📚 Curso: Inteligencia Artificial (CC3085)")
+        st.caption("Curso: Inteligencia Artificial (CC3085)")
     with col3:
-        st.caption("✍️ Proyecto #2: Maze Solver")
+        st.caption("Proyecto #2: Maze Solver")
 
 
 if __name__ == "__main__":

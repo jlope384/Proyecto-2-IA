@@ -24,7 +24,7 @@ class DFSAlgorithm(SearchAlgorithm):
                 self.visited = visited
                 return self.reconstruct_path(parent), self.nodes_explored, visited
             
-            for dr, dc in DIRS:
+            for dr, dc in reversed(DIRS):
                 nr, nc = cur[0] + dr, cur[1] + dc
                 nxt = (nr, nc)
                 

@@ -85,9 +85,8 @@ st.markdown("""
 # ═════════════════════════════════════════════════════════════════
 #  STATE MANAGEMENT
 # ═════════════════════════════════════════════════════════════════
-@st.cache_resource
 def init_session_state():
-    """Inicializa el estado de la sesión"""
+    """Inicializa el estado de la sesion"""
     if 'maze' not in st.session_state:
         st.session_state.maze = None
         st.session_state.rows = 0
@@ -103,8 +102,6 @@ def init_session_state():
         st.session_state.results = []
         st.session_state.compare_results = []
         st.session_state.last_result = None
-    
-    return st.session_state
 
 
 def reset_maze_state():
@@ -257,20 +254,6 @@ def main():
             except Exception as e:
                 st.error(f"❌ Error al cargar archivo: {e}")
         
-        # Opción 2: Crear aleatorio
-        if st.button("Generar laberinto aleatorio", use_container_width=True):
-            # Crear un laberinto aleatorio pequeño
-            rows, cols = 15, 20
-            maze = [[random.choice([0, 0, 0, 1]) for _ in range(cols)] for _ in range(rows)]
-            
-            # Asegurar inicio y meta
-            start = (0, 0)
-            goal = (rows - 1, cols - 1)
-            maze[start[0]][start[1]] = 2
-            maze[goal[0]][goal[1]] = 3
-            
-            load_maze_data(maze, rows, cols, start, goal)
-            st.success("Laberinto generado")
         
         st.divider()
         

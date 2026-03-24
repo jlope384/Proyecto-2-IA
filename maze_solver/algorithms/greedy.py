@@ -17,13 +17,14 @@ class GreedyAlgorithm(SearchAlgorithm):
     
     def solve(self, callback=None):
         h0 = self.heuristic(self.start, self.goal)
-        pq = [(h0, self.start)]
+        pq = [(h0, 0, self.start)]  # (h_value, counter, position)
+        counter = 0
         parent = {self.start: None}
-        visited = set([self.start])
+        visited = {self.start}  # Marca start como visitado
         self.nodes_explored = 0
         
         while pq:
-            _, cur = heapq.heappop(pq)
+            _, _, cur = heapq.heappop(pq)
             self.nodes_explored += 1
             
             if cur == self.goal:
@@ -35,12 +36,13 @@ class GreedyAlgorithm(SearchAlgorithm):
                 nxt = (nr, nc)
                 
                 if self.is_valid(nr, nc) and nxt not in visited:
-                    visited.add(nxt)
+                    visited.add(nxt)  # Marca como visitado AL AGREGAR
                     parent[nxt] = cur
-                    heapq.heappush(pq, (self.heuristic(nxt, self.goal), nxt))
+                    counter += 1
+                    heapq.heappush(pq, (self.heuristic(nxt, self.goal), counter, nxt))
             
             if callback:
-                callback(visited, {item[1] for item in pq})
+                callback(visited, {item[2] for item in pq})
         
         self.visited = visited
         return None, self.nodes_explored, visited

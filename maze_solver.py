@@ -141,12 +141,13 @@ def dfs(maze, rows, cols, start, goal, callback=None):
 
 def greedy(maze, rows, cols, start, goal, hfunc, callback=None):
     h0  = hfunc(start, goal)
-    pq  = [(h0, start)]
+    pq  = [(h0, 0, start)]  # (h_value, counter, position)
     parent  = {start: None}
-    visited = set([start])
+    visited = {start}  # Marca start como visitado
     nodes   = 0
+    counter = 0
     while pq:
-        _, cur = heapq.heappop(pq)
+        _, _, cur = heapq.heappop(pq)
         nodes += 1
         if cur == goal:
             return reconstruct(parent, goal), nodes, visited
@@ -154,11 +155,11 @@ def greedy(maze, rows, cols, start, goal, hfunc, callback=None):
             nr, nc = cur[0]+dr, cur[1]+dc
             nxt = (nr, nc)
             if is_valid(maze, rows, cols, nr, nc) and nxt not in visited:
-                visited.add(nxt)
+                visited.add(nxt)  # Marca como visitado AL AGREGAR
                 parent[nxt] = cur
-                heapq.heappush(pq, (hfunc(nxt, goal), nxt))
-        if callback: callback(visited, {item[1] for item in pq})
-    return None, nodes, visited
+                counter += 1
+                heapq.heappush(pq, (hfunc(nxt, goal), counter, nxt))
+        if callback: callback(visited, {item[2] for item in pq})
 
 def astar(maze, rows, cols, start, goal, hfunc, callback=None):
     g_cost  = {start: 0}

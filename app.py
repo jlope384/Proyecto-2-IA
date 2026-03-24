@@ -382,8 +382,7 @@ def main():
         
         else:
             st.info(
-                "Carga un laberinto usando el panel de la izquierda para comenzar",
-                icon="info"
+                "Carga un laberinto usando el panel de la izquierda para comenzar"
             )
     
     # Footer
